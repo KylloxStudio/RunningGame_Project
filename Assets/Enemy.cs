@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        speed = UnityEngine.Random.Range(5f, 15f);
+        speed = UnityEngine.Random.Range(5f, 25f);
     }
 
     // Update is called once per frame
@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
         if (transform.position.x < -10)
         {
             Destroy(gameObject);
+            GameManager.instance.enemyGroup.Remove(this);
         }
     }
 }
