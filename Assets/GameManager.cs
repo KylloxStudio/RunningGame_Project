@@ -17,9 +17,11 @@ public class GameManager : MonoBehaviour
     public float score = 0f;
     public float spawnPerTimer = 5f;
     public bool isPlaying = true;
+    public float spawnTimer = 0.4f;
     public float spawnTime = 0.4f;
     public int maxSpawnCount = 3;
     public float spawnPercent = 0.4f;
+    public bool noCool = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -46,17 +48,29 @@ public class GameManager : MonoBehaviour
                 spawnPercent += 0.1f;
                 maxSpawnCount += 1;
                 spawnPerTimer = 5f;
+                spawnTime -= 0.1f;
             }
-            spawnTime -= Time.deltaTime;
+            spawnTimer -= Time.deltaTime;
             float random = Random.Range(0f, 100f);
             if (random <= spawnPercent)
             {
-                if (enemyGroup.Count <= maxSpawnCount && spawnTime <= 0)
+                if (enemyGroup.Count <= maxSpawnCount && spawnTimer <= 0)
                 {
                     Enemy e = Instantiate(enemy);
                     enemyGroup.Add(e);
-                    e.transform.position = new Vector3(Random.Range(10f, 15f), Random.Range(-1f, -3.3f));
-                    spawnTime = 0.4f;
+                    e.transform.position = new Vector3(Random.Range(10f, 15f), Random.Range(-3.3f, -1.9f));
+                    spawnTimer = spawnTime;
+                }
+            }
+            random = Random.Range(0f, 100f);
+            if (random <= spawnPercent)
+            {
+                if (enemyGroup.Count <= maxSpawnCount && spawnTimer <= 0)
+                {
+                    Enemy e = Instantiate(enemy);
+                    enemyGroup.Add(e);
+                    e.transform.position = new Vector3(Random.Range(10f, 15f), Random.Range(-0.1f, 0.9f));
+                    spawnTimer = spawnTime;
                 }
             }
         }
