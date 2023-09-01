@@ -21,8 +21,14 @@ public class Player : MonoBehaviour
     {
         if (!isJumping && Input.GetButtonDown("Jump"))
         {
-            isJumping = true;
+            if (!Input.GetKey(KeyCode.ScrollLock))
+                isJumping = true;
             rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        }
+
+        if (transform.position.y >= 5.4f)
+        {
+            isGameOver = true;
         }
     }
 
