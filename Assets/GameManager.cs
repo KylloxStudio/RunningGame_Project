@@ -5,21 +5,26 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     public Player player;
     public Enemy enemy;
     public List<Enemy> enemyGroup;
-    public float spawnPercent;
 
     public Text scoreText;
     public GameObject gameoverPanel;
 
-    public float timer = 0f;
+    public float score = 0f;
+    public float spawnPerTimer = 5f;
     public bool isPlaying = true;
+    public float spawnTime = 0.4f;
+    public int maxSpawnCount = 3;
+    public float spawnPercent = 0.4f;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-
+        instance = this;
     }
 
     // Update is called once per frame
@@ -33,14 +38,26 @@ public class GameManager : MonoBehaviour
                 isPlaying = false;
                 gameoverPanel.SetActive(true);
             }
-            timer += Time.deltaTime;
-            scoreText.text = "Score: " + timer.ToString("N2");
+            score += Time.deltaTime;
+            scoreText.text = "Score: " + score.ToString("N2");
+            spawnPerTimer -= Time.deltaTime;
+            if (spawnPerTimer <= 0)
+            {
+                spawnPercent += 0.1f;
+                maxSpawnCount += 1;
+                spawnPerTimer = 5f;
+            }
+            spawnTime -= Time.deltaTime;
             float random = Random.Range(0f, 100f);
             if (random <= spawnPercent)
             {
-                Enemy e = Instantiate(enemy);
-                enemyGroup.Add(e);
-                e.transform.position = new Vector3(Random.Range(10f, 15f), Random.Range(-1.5f, -3.3f));
+                if (enemyGroup.Count <= maxSpawnCount && spawnTime <= 0)
+                {
+                    Enemy e = Instantiate(enemy);
+                    enemyGroup.Add(e);
+                    e.transform.position = new Vector3(Random.Range(10f, 15f), Random.Range(-1f, -3.3f));
+                    spawnTime = 0.4f;
+                }
             }
         }
     }
